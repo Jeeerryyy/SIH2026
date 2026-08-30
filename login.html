@@ -1,0 +1,941 @@
+<!-- Apple UI Design System – Verified: 8pt Grid, SF Pro Typography, Material-Depth, Natural Spring Motion -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Access Verification</title>
+    
+    <style>
+        /* ==========================================================================
+           1. DESIGN TOKENS & CONSTANTS (Apple UI 8pt Grid + Brex Color System)
+           ========================================================================== */
+        :root {
+            /* Brex Core Palette */
+            --brand-black: #15191E;
+            --pure-black: #000000;
+            --brand-orange: #FF5900;
+            --brand-orange-hover: #E64E00;
+            --brand-orange-active: #CC4400;
+            --brand-orange-light: rgba(255, 89, 0, 0.08);
+            
+            --brand-blue: #006EF5;
+            --brand-blue-light: #D5E8FB;
+            
+            --brand-green: #0D9926;
+            --brand-green-light: #D1F4D2;
+            
+            --brand-red: #FF3D00;
+            --brand-red-light: rgba(255, 61, 0, 0.08);
+            
+            /* Neutrals */
+            --gray-secondary: #60646C;
+            --gray-tertiary: #8B8D98;
+            --gray-light: #B9BBC6;
+            --gray-border: rgba(21, 25, 30, 0.10);
+            --gray-divider: #EAEAEF;
+            
+            /* Surfaces (Apple Glassmorphism) */
+            --bg-canvas: #F3F3F7;
+            --surface-card: rgba(255, 255, 255, 0.90);
+            --surface-elevated: #FFFFFF;
+            
+            /* Elevation & Shadows */
+            --shadow-level-1: 0px 2px 8px rgba(0, 0, 0, 0.04);
+            --shadow-level-2: 0px 4px 16px rgba(0, 0, 0, 0.06);
+            --shadow-level-3: 0px 12px 32px rgba(0, 0, 0, 0.08), 0px 2px 6px rgba(0, 0, 0, 0.04);
+            --shadow-focus: 0px 0px 0px 3px rgba(255, 89, 0, 0.20);
+            
+            /* Radii (Apple Constants) */
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --radius-xl: 24px;
+            --radius-full: 9999px;
+            
+            /* Timing / Spring */
+            --spring-transition: 300ms cubic-bezier(0.25, 0.1, 0.25, 1);
+            --pop-spring: 350ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* Anti-Copy & Selection Lock */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        input, textarea, select, button, a {
+            -webkit-user-select: auto;
+            user-select: auto;
+        }
+
+        html, body {
+            height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-canvas);
+            color: var(--brand-black);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow: hidden;
+        }
+
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 24px 16px;
+            position: relative;
+            background: 
+                radial-gradient(circle at 50% 15%, rgba(255, 89, 0, 0.06) 0%, transparent 60%),
+                radial-gradient(circle at 85% 85%, rgba(0, 110, 245, 0.05) 0%, transparent 50%),
+                var(--bg-canvas);
+        }
+
+        .ambient-orb {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            filter: blur(90px);
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.5;
+            transition: all 600ms ease;
+        }
+        .orb-1 {
+            top: -120px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 89, 0, 0.12);
+        }
+        .orb-2 {
+            bottom: -150px;
+            right: 10%;
+            background: rgba(0, 110, 245, 0.10);
+        }
+
+        .login-wrapper {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-card {
+            background: var(--surface-card);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border: 0.5px solid var(--gray-border);
+            border-radius: var(--radius-xl);
+            padding: 44px 34px;
+            box-shadow: var(--shadow-level-3);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: transform 300ms ease, box-shadow 300ms ease, border-color 300ms ease;
+        }
+
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--brand-orange), var(--brand-blue));
+        }
+
+        .login-card.card-success {
+            border-color: rgba(13, 153, 38, 0.4);
+            box-shadow: 0px 12px 36px rgba(13, 153, 38, 0.15), var(--shadow-level-3);
+        }
+
+        .login-card.card-error {
+            animation: appleShake 500ms cubic-bezier(.36,.07,.19,.97) both;
+            border-color: rgba(255, 61, 0, 0.5);
+            box-shadow: 0px 12px 36px rgba(255, 61, 0, 0.15), var(--shadow-level-3);
+        }
+
+        @keyframes appleShake {
+            10%, 90% { transform: translate3d(-3px, 0, 0); }
+            20%, 80% { transform: translate3d(4px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-6px, 0, 0); }
+            40%, 60% { transform: translate3d(6px, 0, 0); }
+        }
+
+        .lock-icon-container {
+            width: 62px;
+            height: 62px;
+            margin: 0 auto 20px auto;
+            border-radius: 50%;
+            background: #FFFFFF;
+            border: 1px solid var(--gray-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-level-1);
+            transition: var(--pop-spring);
+        }
+
+        .lock-icon-container.icon-pulse {
+            border-color: var(--brand-orange);
+            background: var(--brand-orange-light);
+            box-shadow: 0 0 0 4px rgba(255, 89, 0, 0.15);
+            transform: scale(1.06);
+        }
+
+        .lock-icon-container.icon-success {
+            border-color: var(--brand-green);
+            background: var(--brand-green-light);
+            box-shadow: 0 0 0 4px rgba(13, 153, 38, 0.20);
+            transform: scale(1.12);
+        }
+
+        .lock-icon-svg {
+            width: 26px;
+            height: 26px;
+            fill: none;
+            stroke: var(--brand-black);
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transition: stroke 300ms ease;
+        }
+
+        .icon-pulse .lock-icon-svg {
+            stroke: var(--brand-orange);
+        }
+
+        .icon-success .lock-icon-svg {
+            stroke: var(--brand-green);
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--brand-black);
+            letter-spacing: -0.025em;
+            line-height: 1.25;
+            margin-bottom: 24px;
+        }
+
+        .pin-container {
+            margin-top: 10px;
+            margin-bottom: 16px;
+        }
+
+        .pin-boxes {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            position: relative;
+            padding: 6px;
+            border-radius: var(--radius-lg);
+            transition: all 250ms ease;
+            cursor: pointer;
+        }
+
+        /* Subtle container accent when focused */
+        .pin-boxes.is-focused {
+            background: rgba(255, 89, 0, 0.03);
+            border-radius: var(--radius-lg);
+        }
+
+        .laser-scanner {
+            position: absolute;
+            top: 6px;
+            bottom: 6px;
+            width: 3px;
+            background: var(--brand-orange);
+            box-shadow: 0 0 10px 2px var(--brand-orange);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 5;
+            transition: opacity 200ms ease;
+        }
+
+        .laser-scanner.scanning {
+            opacity: 1;
+            animation: laserSweep 500ms ease-in-out infinite alternate;
+        }
+
+        @keyframes laserSweep {
+            0% { left: 6px; }
+            100% { left: calc(100% - 10px); }
+        }
+
+        .pin-box {
+            flex: 1;
+            height: 58px;
+            background: #FFFFFF;
+            border: 1.5px solid var(--gray-border);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+            font-family: "SF Mono", Menlo, Consolas, monospace;
+            color: var(--brand-black);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 220ms cubic-bezier(0.25, 0.1, 0.25, 1);
+            box-shadow: var(--shadow-level-1);
+        }
+
+        /* Unfocused / Idle: No glow */
+        .pin-box.active {
+            border-color: rgba(21, 25, 30, 0.25);
+            background: #FFFFFF;
+        }
+
+        /* Focused: GLOW ONLY when clicked / focused */
+        .pin-boxes.is-focused .pin-box.active {
+            border-color: var(--brand-orange);
+            background: var(--brand-orange-light);
+            box-shadow: 0 0 0 3px rgba(255, 89, 0, 0.22), 0 2px 10px rgba(255, 89, 0, 0.18);
+            transform: translateY(-2px);
+        }
+
+        .pin-box.filled {
+            border-color: rgba(21, 25, 30, 0.35);
+            color: var(--pure-black);
+            background: #FFFFFF;
+            animation: digitPop 180ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .pin-boxes.is-focused .pin-box.filled {
+            border-color: rgba(21, 25, 30, 0.70);
+            box-shadow: 0 0 0 1px rgba(21, 25, 30, 0.15);
+        }
+
+        .pin-box.verified {
+            border-color: var(--brand-green);
+            color: var(--brand-green);
+            background: var(--brand-green-light);
+            box-shadow: 0 0 0 3px rgba(13, 153, 38, 0.20);
+        }
+
+        @keyframes digitPop {
+            0% { transform: scale(0.85); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+
+        #hidden-pin-input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+            width: 1px;
+            height: 1px;
+        }
+
+        /* Apple UI Styled Checkbox */
+        .remember-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 14px;
+            margin-bottom: 18px;
+        }
+
+        .apple-checkbox-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            cursor: pointer;
+            user-select: none;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--gray-secondary);
+            transition: color 200ms ease;
+        }
+
+        .apple-checkbox-label:hover {
+            color: var(--brand-black);
+        }
+
+        .apple-checkbox-input {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .apple-checkbox-custom {
+            width: 18px;
+            height: 18px;
+            border-radius: 5px;
+            border: 1.5px solid var(--gray-border);
+            background: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--spring-transition);
+            box-shadow: var(--shadow-level-1);
+        }
+
+        .apple-checkbox-input:checked + .apple-checkbox-custom {
+            background: var(--brand-orange);
+            border-color: var(--brand-orange);
+            box-shadow: 0 2px 8px rgba(255, 89, 0, 0.25);
+        }
+
+        .check-svg {
+            width: 11px;
+            height: 9px;
+            fill: none;
+            stroke: #FFFFFF;
+            stroke-width: 2.2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            opacity: 0;
+            transform: scale(0.6);
+            transition: all 180ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .apple-checkbox-input:checked + .apple-checkbox-custom .check-svg {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .status-terminal {
+            background: #FFFFFF;
+            border: 1px solid var(--gray-border);
+            border-radius: var(--radius-md);
+            padding: 8px 14px;
+            font-family: "SF Mono", Menlo, Consolas, monospace;
+            font-size: 11px;
+            color: var(--gray-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            height: 38px;
+            box-shadow: var(--shadow-level-1);
+        }
+
+        .status-text {
+            color: var(--brand-black);
+            font-size: 11px;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .btn-unlock {
+            width: 100%;
+            height: 46px;
+            background: var(--brand-orange);
+            color: #FFFFFF;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 2px 10px rgba(255, 89, 0, 0.28);
+            transition: var(--spring-transition);
+        }
+
+        .btn-unlock:hover {
+            background: var(--brand-orange-hover);
+            box-shadow: 0 4px 16px rgba(255, 89, 0, 0.38);
+            transform: translateY(-1px);
+        }
+
+        .btn-unlock:active {
+            background: var(--brand-orange-active);
+            transform: translateY(1px);
+        }
+
+        /* ==========================================================================
+           MOBILE RESPONSIVENESS & TOUCH OPTIMIZATIONS
+           ========================================================================== */
+        @media (max-width: 480px) {
+            body {
+                padding: 16px 12px;
+                overflow-y: auto;
+                min-height: 100dvh;
+            }
+
+            .login-wrapper {
+                max-width: 100%;
+            }
+
+            .login-card {
+                padding: 32px 20px;
+                border-radius: var(--radius-lg);
+            }
+
+            .lock-icon-container {
+                width: 52px;
+                height: 52px;
+                margin-bottom: 16px;
+            }
+
+            .lock-icon-svg {
+                width: 22px;
+                height: 22px;
+            }
+
+            h1 {
+                font-size: 20px;
+                margin-bottom: 18px;
+            }
+
+            .pin-boxes {
+                gap: 6px;
+                padding: 4px;
+            }
+
+            .pin-box {
+                height: 50px;
+                font-size: 20px;
+                border-radius: 10px;
+            }
+
+            .status-terminal {
+                height: 36px;
+                padding: 6px 10px;
+                margin-bottom: 16px;
+            }
+
+            .status-text {
+                font-size: 10px;
+            }
+
+            .btn-unlock {
+                height: 44px;
+                font-size: 13px;
+            }
+
+            .remember-container {
+                margin-top: 10px;
+                margin-bottom: 14px;
+            }
+
+            .apple-checkbox-label {
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .login-card {
+                padding: 24px 14px;
+            }
+
+            .pin-box {
+                height: 44px;
+                font-size: 18px;
+            }
+
+            h1 {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="ambient-orb orb-1" id="orb-ambient"></div>
+<div class="ambient-orb orb-2"></div>
+
+<div class="login-wrapper">
+    <div class="login-card" id="main-card">
+        <!-- Padlock Icon -->
+        <div class="lock-icon-container" id="lock-icon">
+            <svg class="lock-icon-svg" id="lock-svg" viewBox="0 0 24 24">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path id="lock-shackle" d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+        </div>
+
+        <h1>Access Authorization</h1>
+
+        <!-- 5-Digit Passcode Input -->
+        <div class="pin-container">
+            <div class="pin-boxes" id="pin-boxes" onclick="focusPinInput()">
+                <div class="laser-scanner" id="laser-scanner"></div>
+                <div class="pin-box active" id="box-0"></div>
+                <div class="pin-box" id="box-1"></div>
+                <div class="pin-box" id="box-2"></div>
+                <div class="pin-box" id="box-3"></div>
+                <div class="pin-box" id="box-4"></div>
+            </div>
+
+            <input type="password" id="hidden-pin-input" maxlength="5" inputmode="numeric" pattern="[0-9]*" autofocus>
+        </div>
+
+        <!-- Remember Me Checkbox -->
+        <div class="remember-container">
+            <label class="apple-checkbox-label" for="remember-me">
+                <input type="checkbox" id="remember-me" class="apple-checkbox-input" checked>
+                <span class="apple-checkbox-custom">
+                    <svg class="check-svg" viewBox="0 0 12 10">
+                        <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                    </svg>
+                </span>
+                <span>Remember me</span>
+            </label>
+        </div>
+
+        <!-- Status Terminal Line -->
+        <div class="status-terminal">
+            <span class="status-text" id="status-msg">READY — ENTER 5-DIGIT PASSCODE</span>
+        </div>
+
+        <!-- Unlock Button -->
+        <button type="button" id="unlock-btn" class="btn-unlock" onclick="triggerAuth()">
+            <span id="btn-text">Authenticate Key</span>
+            <span>→</span>
+        </button>
+    </div>
+</div>
+
+<script>
+    // Anti-Copy & Right-Click Prevention
+    document.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+        return false;
+    });
+
+    document.addEventListener('copy', (e) => { e.preventDefault(); return false; });
+    document.addEventListener('cut', (e) => { e.preventDefault(); return false; });
+    document.addEventListener('dragstart', (e) => { e.preventDefault(); return false; });
+
+    document.addEventListener('keydown', (e) => {
+        if (
+            (e.ctrlKey && (e.key === 'c' || e.key === 'C' || e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S' || e.key === 'p' || e.key === 'P' || e.key === 'a' || e.key === 'A')) ||
+            (e.ctrlKey && e.shiftKey && (e.key === 'i' || e.key === 'I' || e.key === 'j' || e.key === 'J' || e.key === 'c' || e.key === 'C')) ||
+            (e.metaKey && (e.key === 'c' || e.key === 'C' || e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S' || e.key === 'p' || e.key === 'P')) ||
+            e.key === 'F12'
+        ) {
+            e.preventDefault();
+            return false;
+        }
+    });
+
+    // Unified Project Salt & Verification Payload
+    const PROJECT_SALT_B64 = "QXJvZ3lhU2V0dUJyaWRnZQ==";
+    const VERIFY_CIPHER = {
+        iv: "yS6AWHaKhJ+9Vc6U",
+        data: "qySP3X2iFqMbBnvI1vIdBDSAigtYx8U="
+    };
+
+    const PIN_LENGTH = 5;
+    let enteredPin = "";
+    let isAuthenticating = false;
+    let failedAttempts = 0;
+    let isLockedOut = false;
+
+    const pinBoxesWrapper = document.getElementById('pin-boxes');
+    const hiddenInput = document.getElementById('hidden-pin-input');
+    const rememberMeCheck = document.getElementById('remember-me');
+    const statusMsg = document.getElementById('status-msg');
+    const mainCard = document.getElementById('main-card');
+    const lockIcon = document.getElementById('lock-icon');
+    const lockShackle = document.getElementById('lock-shackle');
+    const laserScanner = document.getElementById('laser-scanner');
+    const unlockBtn = document.getElementById('unlock-btn');
+    const btnText = document.getElementById('btn-text');
+
+    function base64ToUint8(b64) {
+        const raw = atob(b64);
+        const u8 = new Uint8Array(raw.length);
+        for (let i = 0; i < raw.length; i++) {
+            u8[i] = raw.charCodeAt(i);
+        }
+        return u8;
+    }
+
+    function uint8ToBase64(u8) {
+        let binary = '';
+        const len = u8.byteLength;
+        for (let i = 0; i < len; i++) {
+            binary += String.fromCharCode(u8[i]);
+        }
+        return btoa(binary);
+    }
+
+    function focusPinInput() {
+        if (!isLockedOut) {
+            hiddenInput.focus();
+            pinBoxesWrapper.classList.add('is-focused');
+        }
+    }
+
+    hiddenInput.addEventListener('focus', () => {
+        pinBoxesWrapper.classList.add('is-focused');
+    });
+
+    hiddenInput.addEventListener('blur', () => {
+        pinBoxesWrapper.classList.remove('is-focused');
+    });
+
+    // Check if session already exists for auto-login
+    async function checkExistingSession() {
+        const savedKey = localStorage.getItem('arogya_sec_key') || sessionStorage.getItem('arogya_sec_key');
+        if (!savedKey) {
+            return;
+        }
+
+        try {
+            const ivBytes = base64ToUint8(VERIFY_CIPHER.iv);
+            const cipherBytes = base64ToUint8(VERIFY_CIPHER.data);
+            const keyBytes = base64ToUint8(savedKey);
+
+            const cryptoKey = await crypto.subtle.importKey(
+                'raw',
+                keyBytes,
+                { name: 'AES-GCM' },
+                false,
+                ['decrypt']
+            );
+
+            const decryptedBuf = await crypto.subtle.decrypt(
+                { name: 'AES-GCM', iv: ivBytes },
+                cryptoKey,
+                cipherBytes
+            );
+
+            if (new TextDecoder().decode(decryptedBuf) === 'AUTH_OK') {
+                sessionStorage.setItem('arogya_sec_key', savedKey);
+                window.location.href = getReturnUrl();
+                return;
+            }
+        } catch(e) {
+            localStorage.removeItem('arogya_sec_key');
+            sessionStorage.removeItem('arogya_sec_key');
+        }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+        checkExistingSession();
+    });
+
+    document.addEventListener('click', (e) => {
+        if (e.target.closest('.pin-boxes') || e.target.id === 'hidden-pin-input') {
+            focusPinInput();
+        }
+    });
+
+    hiddenInput.addEventListener('input', (e) => {
+        if (isLockedOut || isAuthenticating) return;
+        enteredPin = hiddenInput.value.replace(/[^0-9]/g, '').slice(0, PIN_LENGTH);
+        hiddenInput.value = enteredPin;
+        updatePinUI();
+
+        if (enteredPin.length === PIN_LENGTH) {
+            triggerAuth();
+        }
+    });
+
+    hiddenInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            triggerAuth();
+        }
+    });
+
+    function updatePinUI() {
+        for (let i = 0; i < PIN_LENGTH; i++) {
+            const box = document.getElementById(`box-${i}`);
+            if (i < enteredPin.length) {
+                box.textContent = enteredPin[i];
+                box.className = "pin-box filled";
+            } else if (i === enteredPin.length) {
+                box.textContent = "";
+                box.className = "pin-box active";
+            } else {
+                box.textContent = "";
+                box.className = "pin-box";
+            }
+        }
+        
+        if (enteredPin.length > 0) {
+            statusMsg.textContent = `CAPTURING CIPHER: [ ${enteredPin.length} / ${PIN_LENGTH} ]`;
+            lockIcon.classList.add('icon-pulse');
+        } else {
+            statusMsg.textContent = "READY — ENTER 5-DIGIT PASSCODE";
+            lockIcon.classList.remove('icon-pulse');
+        }
+    }
+
+    function getReturnUrl() {
+        const params = new URLSearchParams(window.location.search);
+        return params.get('returnUrl') || 'index.html';
+    }
+
+    async function deriveAesKey(pin) {
+        const encoder = new TextEncoder();
+        const rawSecret = encoder.encode('sih2026:' + pin);
+        const saltBytes = base64ToUint8(PROJECT_SALT_B64);
+        
+        const baseKey = await crypto.subtle.importKey(
+            'raw',
+            rawSecret,
+            { name: 'PBKDF2' },
+            false,
+            ['deriveKey', 'deriveBits']
+        );
+
+        const derivedKey = await crypto.subtle.deriveKey(
+            {
+                name: 'PBKDF2',
+                salt: saltBytes,
+                iterations: 100000,
+                hash: 'SHA-256'
+            },
+            baseKey,
+            { name: 'AES-GCM', length: 256 },
+            true,
+            ['encrypt', 'decrypt']
+        );
+
+        return derivedKey;
+    }
+
+    async function triggerAuth() {
+        if (isAuthenticating || isLockedOut) return;
+
+        if (enteredPin.length < PIN_LENGTH) {
+            statusMsg.textContent = `INCOMPLETE PASSCODE (${enteredPin.length}/${PIN_LENGTH})`;
+            focusPinInput();
+            return;
+        }
+
+        isAuthenticating = true;
+        
+        laserScanner.classList.add('scanning');
+        statusMsg.textContent = "DECRYPTING KEY DERIVATION...";
+        btnText.textContent = "Verifying...";
+        unlockBtn.style.background = "var(--brand-blue)";
+
+        try {
+            const ivBytes = base64ToUint8(VERIFY_CIPHER.iv);
+            const cipherBytes = base64ToUint8(VERIFY_CIPHER.data);
+
+            const aesKey = await deriveAesKey(enteredPin);
+
+            // Attempt AES-GCM Decryption (Mathematical Proof of Correctness)
+            const decryptedBuf = await crypto.subtle.decrypt(
+                { name: 'AES-GCM', iv: ivBytes },
+                aesKey,
+                cipherBytes
+            );
+
+            const resultText = new TextDecoder().decode(decryptedBuf);
+            if (resultText === 'AUTH_OK') {
+                const exportedRawKey = await crypto.subtle.exportKey('raw', aesKey);
+                const rawKeyB64 = uint8ToBase64(new Uint8Array(exportedRawKey));
+
+                sessionStorage.setItem('arogya_sec_key', rawKeyB64);
+                if (rememberMeCheck.checked) {
+                    localStorage.setItem('arogya_sec_key', rawKeyB64);
+                } else {
+                    localStorage.removeItem('arogya_sec_key');
+                }
+
+                setTimeout(() => {
+                    laserScanner.classList.remove('scanning');
+                    handleAuthSuccess();
+                }, 250);
+            } else {
+                throw new Error("Invalid");
+            }
+        } catch (err) {
+            setTimeout(() => {
+                laserScanner.classList.remove('scanning');
+                handleAuthFailure();
+            }, 300);
+        }
+    }
+
+    function handleAuthSuccess() {
+        mainCard.classList.remove('card-error');
+        mainCard.classList.add('card-success');
+        lockIcon.classList.remove('icon-pulse');
+        lockIcon.classList.add('icon-success');
+        
+        lockShackle.setAttribute('d', 'M7 7a5 5 0 0 1 10 0v1');
+        
+        for (let i = 0; i < PIN_LENGTH; i++) {
+            document.getElementById(`box-${i}`).className = "pin-box verified";
+        }
+
+        statusMsg.textContent = "ACCESS GRANTED • CIPHER UNLOCKED";
+        btnText.textContent = "✓ UNLOCKED — LAUNCHING";
+        unlockBtn.style.background = "var(--brand-green)";
+
+        setTimeout(() => {
+            document.body.style.transition = "all 350ms ease";
+            document.body.style.opacity = "0";
+            document.body.style.transform = "scale(1.02)";
+            
+            setTimeout(() => {
+                window.location.href = getReturnUrl();
+            }, 250);
+        }, 350);
+    }
+
+    function handleAuthFailure() {
+        failedAttempts++;
+        isAuthenticating = false;
+
+        mainCard.classList.add('card-error');
+        statusMsg.textContent = `ACCESS DENIED (Attempt ${failedAttempts})`;
+        btnText.textContent = "Invalid Passcode";
+        unlockBtn.style.background = "var(--brand-red)";
+
+        setTimeout(() => {
+            mainCard.classList.remove('card-error');
+            enteredPin = "";
+            hiddenInput.value = "";
+            updatePinUI();
+            btnText.textContent = "Authenticate Key";
+            unlockBtn.style.background = "var(--brand-orange)";
+            focusPinInput();
+        }, 750);
+
+        if (failedAttempts >= 5) {
+            lockoutUser();
+        }
+    }
+
+    function lockoutUser() {
+        isLockedOut = true;
+        let countdown = 15;
+        statusMsg.textContent = `RATE LIMIT EXCEEDED (${countdown}s)`;
+        unlockBtn.disabled = true;
+
+        const interval = setInterval(() => {
+            countdown--;
+            statusMsg.textContent = `SECURITY TIMEOUT: ${countdown}s`;
+            if (countdown <= 0) {
+                clearInterval(interval);
+                isLockedOut = false;
+                failedAttempts = 0;
+                unlockBtn.disabled = false;
+                statusMsg.textContent = "READY — ENTER 5-DIGIT PASSCODE";
+                focusPinInput();
+            }
+        }, 1000);
+    }
+</script>
+
+</body>
+</html>
