@@ -1,0 +1,50 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: arogyasetu-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: arogya_admin
+      POSTGRES_PASSWORD: arogya_password_sih2026
+      POSTGRES_DB: arogyasetu_bridge_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U arogya_admin -d arogyasetu_bridge_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: arogyasetu-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  api-gateway:
+    build:
+      context: ..
+      dockerfile: infrastructure/Dockerfile.api
+    container_name: arogyasetu-api-gateway
+    restart: always
+    environment:
+      PORT: 4000
+      DATABASE_URL: postgresql://arogya_admin:arogya_password_sih2026@postgres:5432/arogya_bridge_db
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: arogya_state_scale_secret_sih2026
+    ports:
+      - "4000:4000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+  redis_data:

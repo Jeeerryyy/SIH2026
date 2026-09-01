@@ -1,0 +1,528 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// -----------------------------------------------------------------------------
+// 1. CORE ORGANIZATIONAL & USER TABLES
+// -----------------------------------------------------------------------------
+
+enum UserRole {
+  SUPER_ADMIN
+  STATE_ADMIN
+  DHO
+  THO
+  SPECIALIST
+  MO
+  CHO
+  PHARMACIST
+  LAB_TECHNICIAN
+  ANM
+  ASHA
+  PATIENT
+}
+
+enum FacilityType {
+  SC_HWC
+  PHC
+  RH_SDH
+  DH
+  GMC
+}
+
+model User {
+  id                     String    @id @default(uuid())
+  username               String    @unique
+  passwordHash           String
+  fullName               String
+  email                  String?   @unique
+  phoneNumber            String    @unique
+  role                   UserRole
+  registrationNumber     String?   // Medical Council / Nursing Registration
+  facilityId             String?
+  district               String
+  taluka                 String?
+  isActive               Boolean   @default(true)
+  preferredLanguage      String    @default("mr")
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
+
+  facility               Facility? @relation(fields: [facilityId], references: [id])
+  encountersRecorded     Encounter[] @relation("ProviderEncounters")
+  prescriptionsWritten   Prescription[] @relation("DoctorPrescriptions")
+  triageAssessmentsDone  TriageAssessment[]
+  ashaIncentivesClaimed  AshaIncentive[] @relation("AshaClaims")
+  userSessions           UserSession[]
+  auditLogs              AuditLog[]
+
+  @@map("users")
+}
+
+model Facility {
+  id                     String       @id @default(uuid())
+  ninCode                String       @unique // National Health Facility Registry (HFR) Code
+  name                   String
+  facilityType           FacilityType
+  district               String
+  taluka                 String
+  village                String?
+  pincode                String
+  latitude               Float
+  longitude              Float
+  hasTelemedicineHub     Boolean      @default(false)
+  hasFunctionalColdChain Boolean      @default(false)
+  parentFacilityId       String?
+  activeIphsDrugCount    Int          @default(0)
+  createdAt              DateTime     @default(now())
+  updatedAt              DateTime     @updatedAt
+
+  users                  User[]
+  patientsAssigned       Patient[]
+  encounters             Encounter[]
+  referralsFrom          Referral[]   @relation("ReferringFacility")
+  referralsTo            Referral[]   @relation("ReceivingFacility")
+  inventoryBatches       DrugInventoryBatch[]
+  stockTransactions      StockTransaction[]
+  equipmentRegistry      EquipmentRegistry[]
+  dailyStats             FacilityDailyStat[]
+
+  @@map("facilities")
+}
+
+model UserSession {
+  id           String   @id @default(uuid())
+  userId       String
+  tokenHash    String   @unique
+  ipAddress    String?
+  userAgent    String?
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
+
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_sessions")
+}
+
+// -----------------------------------------------------------------------------
+// 2. PATIENT & CLINICAL ENCOUNTER TABLES
+// -----------------------------------------------------------------------------
+
+model Patient {
+  id                         String    @id @default(uuid())
+  abhaId                     String?   @unique // 14-digit ABHA ID
+  abhaAddress                String?   @unique // name@abdm
+  aadhaarVaultRef            String?
+  fullName                   String
+  gender                     String    // MALE, FEMALE, OTHER
+  dateOfBirth                DateTime
+  phoneNumber                String?
+  caregiverPhone             String?
+  residenceVillage           String
+  residenceTaluka            String
+  residenceDistrict          String
+  assignedAshaId             String?
+  assignedFacilityId         String?
+  bloodGroup                 String?
+  isSickleCellTraitOrDiseased Boolean  @default(false)
+  isHighRiskPregnancy        Boolean   @default(false)
+  isHypertensive             Boolean   @default(false)
+  isDiabetic                 Boolean   @default(false)
+  isUnderMjpjay              Boolean   @default(true) // Mahatma Jyotirao Phule Jan Arogya Yojana
+  createdAt                  DateTime  @default(now())
+  updatedAt                  DateTime  @updatedAt
+
+  assignedFacility           Facility? @relation(fields: [assignedFacilityId], references: [id])
+  encounters                 Encounter[]
+  vitalsList                 Vitals[]
+  triageAssessments          TriageAssessment[]
+  prescriptions              Prescription[]
+  referrals                  Referral[]
+  diagnosticOrders           DiagnosticOrder[]
+  ashaIncentives             AshaIncentive[]
+  teleconsultConsents        TeleconsultConsent[]
+
+  @@map("patients")
+}
+
+enum EncounterType {
+  FIELD_SCREENING
+  OPD_CONSULTATION
+  TELECONSULTATION
+  ANC_CHECKUP
+  IMMUNIZATION
+  NCD_SCREENING
+  EMERGENCY
+}
+
+enum EncounterStatus {
+  TRIAGED
+  IN_QUEUE
+  IN_PROGRESS
+  COMPLETED
+  REFERRED
+  CANCELLED
+}
+
+model Encounter {
+  id                 String          @id @default(uuid())
+  patientId          String
+  facilityId         String
+  providerId         String
+  encounterType      EncounterType
+  status             EncounterStatus @default(TRIAGED)
+  startedAt          DateTime        @default(now())
+  completedAt        DateTime?
+  chiefComplaint     String
+  clinicalNotes      String?
+  diagnosisIcd10Code String?
+  diagnosisName      String?
+  offlineSyncId      String?         @unique
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+
+  patient            Patient         @relation(fields: [patientId], references: [id])
+  facility           Facility        @relation(fields: [facilityId], references: [id])
+  provider           User            @relation("ProviderEncounters", fields: [providerId], references: [id])
+  vitals             Vitals?
+  triageAssessment   TriageAssessment?
+  prescription       Prescription?
+  referral           Referral?
+  diagnosticOrders   DiagnosticOrder[]
+  teleconsultConsent TeleconsultConsent?
+
+  @@map("encounters")
+}
+
+model Vitals {
+  id                     String    @id @default(uuid())
+  encounterId            String    @unique
+  patientId              String
+  systolicBp             Int?
+  diastolicBp            Int?
+  heartRate              Int?
+  respiratoryRate        Int?
+  spo2                   Float?
+  temperatureCelsius     Float?
+  randomBloodGlucoseMgDl Float?
+  hemoglobinGPerDl       Float?
+  fetalHeartRateBpm      Int?
+  fundalHeightCm         Float?
+  weightKg               Float?
+  heightCm               Float?
+  bmi                    Float?
+  recordedAt             DateTime  @default(now())
+
+  encounter              Encounter @relation(fields: [encounterId], references: [id], onDelete: Cascade)
+  patient                Patient   @relation(fields: [patientId], references: [id])
+
+  @@map("vitals")
+}
+
+enum TriageUrgencyTier {
+  EMERGENCY_RED
+  URGENT_AMBER
+  SEMI_URGENT_YELLOW
+  ROUTINE_GREEN
+}
+
+model TriageAssessment {
+  id                    String            @id @default(uuid())
+  encounterId           String            @unique
+  patientId             String
+  assessedById          String
+  urgencyTier           TriageUrgencyTier
+  cdssScore             Int
+  primaryRedFlag        String?
+  recommendedAction     String
+  suggestedFacilityType FacilityType
+  isAutoEscalated       Boolean           @default(false)
+  syndromicTags         String[]
+  assessedAt            DateTime          @default(now())
+
+  encounter             Encounter         @relation(fields: [encounterId], references: [id], onDelete: Cascade)
+  patient               Patient           @relation(fields: [patientId], references: [id])
+  assessedBy            User              @relation(fields: [assessedById], references: [id])
+
+  @@map("triage_assessments")
+}
+
+// -----------------------------------------------------------------------------
+// 3. E-PRESCRIPTION & PHARMACY FEFO TABLES
+// -----------------------------------------------------------------------------
+
+model Medicine {
+  id                 String       @id @default(uuid())
+  genericName        String
+  brandName          String?
+  strength           String       // e.g. 500mg, 10ml
+  dosageForm         String       // Tablet, Syrup, Injection, Ointment
+  category           String       // ESSENTIAL_IPHS, SCHEDULE_H, etc.
+  isScheduleX        Boolean      @default(false)
+  iphsRequiredLevel  FacilityType @default(PHC)
+  unitPriceInr       Float        @default(0.0)
+
+  prescriptionItems  PrescriptionItem[]
+  inventoryBatches   DrugInventoryBatch[]
+
+  @@map("medicines")
+}
+
+model Prescription {
+  id                         String    @id @default(uuid())
+  encounterId                String    @unique
+  patientId                  String
+  doctorId                   String
+  doctorRegistrationNumber   String
+  nmcAppendix2Compliant      Boolean   @default(true)
+  digitalSignatureHash       String?
+  isDispensed                Boolean   @default(false)
+  dispensedAt                DateTime?
+  dispensingPharmacistId     String?
+  prescribedAt               DateTime  @default(now())
+
+  encounter                  Encounter @relation(fields: [encounterId], references: [id], onDelete: Cascade)
+  patient                    Patient   @relation(fields: [patientId], references: [id])
+  doctor                     User      @relation("DoctorPrescriptions", fields: [doctorId], references: [id])
+  items                      PrescriptionItem[]
+
+  @@map("prescriptions")
+}
+
+model PrescriptionItem {
+  id                   String       @id @default(uuid())
+  prescriptionId       String
+  medicineId           String
+  dosage               String
+  frequency            String
+  durationDays         Int
+  instructions         String
+  quantityPrescribed   Int
+  quantityDispensed    Int          @default(0)
+  isGenericAvailable   Boolean      @default(true)
+
+  prescription         Prescription @relation(fields: [prescriptionId], references: [id], onDelete: Cascade)
+  medicine             Medicine     @relation(fields: [medicineId], references: [id])
+
+  @@map("prescription_items")
+}
+
+model DrugInventoryBatch {
+  id                     String    @id @default(uuid())
+  facilityId             String
+  medicineId             String
+  batchNumber            String
+  mfgDate                DateTime
+  expiryDate             DateTime
+  quantityAvailable      Int
+  dvdmsSourceWarehouseId String?
+  isFefoPriority         Boolean   @default(true)
+  isQuarantined          Boolean   @default(false)
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
+
+  facility               Facility  @relation(fields: [facilityId], references: [id])
+  medicine               Medicine  @relation(fields: [medicineId], references: [id])
+  stockTransactions      StockTransaction[]
+
+  @@map("drug_inventory_batches")
+}
+
+model StockTransaction {
+  id               String              @id @default(uuid())
+  facilityId       String
+  batchId          String
+  transactionType  String              // RECEIPT_FROM_DVDMS, DISPENSE_TO_PATIENT, etc.
+  quantityChange   Int
+  balanceAfter     Int
+  performedById    String
+  notes            String?
+  createdAt        DateTime            @default(now())
+
+  facility         Facility            @relation(fields: [facilityId], references: [id])
+  batch            DrugInventoryBatch  @relation(fields: [batchId], references: [id])
+
+  @@map("stock_transactions")
+}
+
+// -----------------------------------------------------------------------------
+// 4. REFERRAL, DIAGNOSTICS & TELECONSULT TABLES
+// -----------------------------------------------------------------------------
+
+enum ReferralUrgency {
+  ROUTINE
+  PRIORITY
+  EMERGENCY
+}
+
+enum ReferralStatus {
+  INITIATED
+  TRANSPORT_DISPATCHED
+  EN_ROUTE
+  RECEIVED_AT_FACILITY
+  SPECIALIST_ATTENDED
+  DISCHARGED
+  CLOSED
+}
+
+model Referral {
+  id                        String          @id @default(uuid())
+  encounterId               String          @unique
+  patientId                 String
+  referringFacilityId       String
+  referringProviderId       String
+  receivingFacilityId       String
+  specialistSpecialtyNeeded String
+  urgency                   ReferralUrgency
+  status                    ReferralStatus  @default(INITIATED)
+  clinicalReason            String
+  transportRequired         Boolean         @default(false)
+  transportVehicleNumber    String?
+  mjpjayPreAuthNumber       String?
+  initiatedAt               DateTime        @default(now())
+  arrivedAt                 DateTime?
+  closedAt                  DateTime?
+
+  encounter                 Encounter       @relation(fields: [encounterId], references: [id], onDelete: Cascade)
+  patient                   Patient         @relation(fields: [patientId], references: [id])
+  referringFacility         Facility        @relation("ReferringFacility", fields: [referringFacilityId], references: [id])
+  receivingFacility         Facility        @relation("ReceivingFacility", fields: [receivingFacilityId], references: [id])
+
+  @@map("referrals")
+}
+
+model DiagnosticOrder {
+  id                 String             @id @default(uuid())
+  encounterId        String
+  patientId          String
+  testName           String             // CBC, Sickle Cell Sickling Test, USG Obstetric, etc.
+  testLoincCode      String?
+  status             String             @default("PENDING") // PENDING, SAMPLE_COLLECTED, RESULT_ATTACHED
+  orderedAt          DateTime           @default(now())
+
+  encounter          Encounter          @relation(fields: [encounterId], references: [id], onDelete: Cascade)
+  patient            Patient            @relation(fields: [patientId], references: [id])
+  results            DiagnosticResult[]
+
+  @@map("diagnostic_orders")
+}
+
+model DiagnosticResult {
+  id             String          @id @default(uuid())
+  orderId        String
+  parameterName  String          // e.g. Hemoglobin, White Blood Cells, HbS%
+  resultValue    String
+  unit           String?
+  referenceRange String?
+  isAbnormal     Boolean         @default(false)
+  reportDocumentUrl String?
+  verifiedAt     DateTime        @default(now())
+
+  order          DiagnosticOrder @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@map("diagnostic_results")
+}
+
+model TeleconsultConsent {
+  id                 String    @id @default(uuid())
+  encounterId        String    @unique
+  patientId          String
+  doctorId           String
+  consentType        String    // VERBAL_AUDIO_RECORDED, DIGITAL_OTP_ABHA, WRITTEN_ASHA_ATTESTED
+  audioRecordingUrl  String?
+  isVerified         Boolean   @default(true)
+  consentedAt        DateTime  @default(now())
+
+  encounter          Encounter @relation(fields: [encounterId], references: [id], onDelete: Cascade)
+  patient            Patient   @relation(fields: [patientId], references: [id])
+
+  @@map("teleconsult_consents")
+}
+
+// -----------------------------------------------------------------------------
+// 5. ASHA INCENTIVES & OPERATIONS TABLES
+// -----------------------------------------------------------------------------
+
+model AshaIncentive {
+  id                 String    @id @default(uuid())
+  ashaId             String
+  patientId          String
+  encounterId        String?
+  incentiveType      String    // JSY_INSTITUTIONAL_DELIVERY, HRP_IDENTIFICATION, etc.
+  amountInr          Float
+  activityDate       DateTime
+  status             String    @default("RECORDED") // RECORDED, VERIFIED_BY_ANM, APPROVED_BY_MO, PFMS_PROCESSED
+  claimVoucherNumber String?   @unique
+  pfmsTransactionId  String?
+  approvedById       String?
+  approvedAt         DateTime?
+  notes              String?
+  createdAt          DateTime  @default(now())
+
+  asha               User      @relation("AshaClaims", fields: [ashaId], references: [id])
+  patient            Patient   @relation(fields: [patientId], references: [id])
+
+  @@map("asha_incentives")
+}
+
+model EquipmentRegistry {
+  id                 String    @id @default(uuid())
+  facilityId         String
+  equipmentName      String    // Radiant Warmer, Solar Direct Drive Refrigerator, USG Machine
+  modelNumber        String?
+  serialNumber       String?
+  status             String    @default("FUNCTIONAL") // FUNCTIONAL, DEFECTIVE, UNDER_MAINTENANCE
+  lastMaintainedAt   DateTime?
+  createdAt          DateTime  @default(now())
+
+  facility           Facility  @relation(fields: [facilityId], references: [id])
+
+  @@map("equipment_registry")
+}
+
+model FacilityDailyStat {
+  id                 String    @id @default(uuid())
+  facilityId         String
+  statDate           DateTime
+  opdCount           Int       @default(0)
+  teleconsultCount   Int       @default(0)
+  hrpIdentifiedCount Int       @default(0)
+  emergencyRedCount  Int       @default(0)
+  stockoutDrugCount  Int       @default(0)
+
+  facility           Facility  @relation(fields: [facilityId], references: [id])
+
+  @@unique([facilityId, statDate])
+  @@map("facility_daily_stats")
+}
+
+model AuditLog {
+  id           String   @id @default(uuid())
+  userId       String?
+  action       String   // PATIENT_RECORD_VIEW, EPICK_PRESCRIPTION_SIGNED, ASHA_CLAIM_APPROVED
+  resourceType String
+  resourceId   String
+  ipAddress    String?
+  details      Json?
+  timestamp    DateTime @default(now())
+
+  user         User?    @relation(fields: [userId], references: [id])
+
+  @@map("audit_logs")
+}
+
+model OfflineSyncQueue {
+  id           String   @id @default(uuid())
+  entityType   String
+  entityId     String
+  operation    String   // CREATE, UPDATE, DELETE
+  payload      Bytes
+  syncStatus   String   @default("PENDING") // PENDING, SYNCED, CONFLICT
+  createdAt    DateTime @default(now())
+  syncedAt     DateTime?
+
+  @@map("offline_sync_queue")
+}

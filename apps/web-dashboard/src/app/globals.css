@@ -1,0 +1,155 @@
+:root {
+  --color-primary: #75A68C;
+  --color-primary-hover: #456B4D;
+  --color-link: #517C65;
+  --color-on-primary: #2D2D2E;
+  --color-ink: #2D2D2E;
+  --color-body: #FFFFFF;
+  --color-surface-alt: #E3EDE8;
+  --color-surface-raised: #DCE5E1;
+  --color-hairline: #D6D6D6;
+  --color-muted: #737373;
+  --color-faint: #659079;
+
+  --triage-red: #C8372D;
+  --triage-red-bg: #FDF2F2;
+  --triage-amber: #D97706;
+  --triage-amber-bg: #FEF9C3;
+  --triage-yellow: #858C2B;
+  --triage-yellow-bg: #F9FBE7;
+  --triage-green: #517C65;
+  --triage-green-bg: #E3EDE8;
+
+  --font-display: 'Athelas', 'Georgia', 'Playfair Display', serif;
+  --font-body: 'Hanken Grotesk', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  --rounded-pill: 9999px;
+  --rounded-card: 0px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--color-body);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, .serif-heading {
+  font-family: var(--font-display);
+  font-weight: 500;
+  margin: 0 0 8px 0;
+  color: var(--color-ink);
+}
+
+h1 { font-size: 32px; }
+h2 { font-size: 24px; }
+h3 { font-size: 18px; }
+
+/* Hireavilla Pill Button */
+.btn-pill {
+  background-color: var(--color-primary);
+  color: #FFFFFF;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: var(--rounded-pill);
+  height: 44px;
+  padding: 0 24px;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 180ms ease;
+  text-decoration: none;
+}
+
+.btn-pill:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.btn-pill-secondary {
+  background-color: var(--color-surface-alt);
+  color: var(--color-ink);
+  border: 1px solid var(--color-hairline);
+}
+
+.btn-pill-secondary:hover {
+  background-color: var(--color-surface-raised);
+}
+
+/* Hireavilla Color Block Card */
+.hireavilla-card {
+  background-color: var(--color-body);
+  border: 1px solid var(--color-hairline);
+  padding: 24px;
+  border-radius: var(--rounded-card);
+}
+
+.hireavilla-card-alt {
+  background-color: var(--color-surface-alt);
+  border: 1px solid var(--color-hairline);
+  padding: 24px;
+  border-radius: var(--rounded-card);
+}
+
+/* Clean Input */
+.hireavilla-input {
+  width: 100%;
+  height: 44px;
+  border: 1px solid var(--color-hairline);
+  background-color: #FFFFFF;
+  color: var(--color-ink);
+  padding: 0 16px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  outline: none;
+  transition: border-color 180ms ease;
+}
+
+.hireavilla-input:focus {
+  border-color: var(--color-primary);
+}
+
+/* Responsive Table */
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+table.hireavilla-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+table.hireavilla-table th {
+  background-color: var(--color-surface-alt);
+  color: var(--color-ink);
+  font-weight: 600;
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--color-hairline);
+  font-size: 12.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+table.hireavilla-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--color-hairline);
+}
+
+table.hireavilla-table tr:hover {
+  background-color: #FAFAFA;
+}

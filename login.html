@@ -1,61 +1,53 @@
-<!-- Apple UI Design System – Verified: 8pt Grid, SF Pro Typography, Material-Depth, Natural Spring Motion -->
+<!-- Hireavilla Luxury Sage & Serene Earth Design System -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secure Access Verification</title>
+    <title>Secure Access Verification — ArogyaSetu Bridge</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,400&display=swap" rel="stylesheet">
     
     <style>
         /* ==========================================================================
-           1. DESIGN TOKENS & CONSTANTS (Apple UI 8pt Grid + Brex Color System)
+           1. DESIGN TOKENS (Hireavilla Luxury Sage Palette)
            ========================================================================== */
         :root {
-            /* Brex Core Palette */
-            --brand-black: #15191E;
-            --pure-black: #000000;
-            --brand-orange: #FF5900;
-            --brand-orange-hover: #E64E00;
-            --brand-orange-active: #CC4400;
-            --brand-orange-light: rgba(255, 89, 0, 0.08);
+            --brand-primary: #75A68C;
+            --brand-primary-hover: #456B4D;
+            --brand-link: #517C65;
+            --brand-ink: #2D2D2E;
             
-            --brand-blue: #006EF5;
-            --brand-blue-light: #D5E8FB;
+            --brand-surface-alt: #E3EDE8;
+            --brand-surface-raised: #DCE5E1;
+            --brand-hairline: #D6D6D6;
+            --brand-muted: #737373;
+            --brand-faint: #659079;
             
-            --brand-green: #0D9926;
-            --brand-green-light: #D1F4D2;
+            --brand-green: #517C65;
+            --brand-green-light: #E3EDE8;
             
-            --brand-red: #FF3D00;
-            --brand-red-light: rgba(255, 61, 0, 0.08);
+            --brand-red: #C8372D;
+            --brand-red-light: #FDF2F2;
             
-            /* Neutrals */
-            --gray-secondary: #60646C;
-            --gray-tertiary: #8B8D98;
-            --gray-light: #B9BBC6;
-            --gray-border: rgba(21, 25, 30, 0.10);
-            --gray-divider: #EAEAEF;
+            /* Surfaces */
+            --bg-canvas: #FFFFFF;
+            --surface-card: #FFFFFF;
+            --surface-elevated: #E3EDE8;
             
-            /* Surfaces (Apple Glassmorphism) */
-            --bg-canvas: #F3F3F7;
-            --surface-card: rgba(255, 255, 255, 0.90);
-            --surface-elevated: #FFFFFF;
+            /* Typography */
+            --font-display: 'Playfair Display', 'Athelas', 'Georgia', serif;
+            --font-body: 'Hanken Grotesk', 'Inter', -apple-system, sans-serif;
             
-            /* Elevation & Shadows */
-            --shadow-level-1: 0px 2px 8px rgba(0, 0, 0, 0.04);
-            --shadow-level-2: 0px 4px 16px rgba(0, 0, 0, 0.06);
-            --shadow-level-3: 0px 12px 32px rgba(0, 0, 0, 0.08), 0px 2px 6px rgba(0, 0, 0, 0.04);
-            --shadow-focus: 0px 0px 0px 3px rgba(255, 89, 0, 0.20);
+            /* Radii */
+            --radius-none: 0px;
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-full: 9999px; /* Pill buttons */
             
-            /* Radii (Apple Constants) */
-            --radius-sm: 8px;
-            --radius-md: 12px;
-            --radius-lg: 20px;
-            --radius-xl: 24px;
-            --radius-full: 9999px;
-            
-            /* Timing / Spring */
-            --spring-transition: 300ms cubic-bezier(0.25, 0.1, 0.25, 1);
-            --pop-spring: 350ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            /* Transitions */
+            --spring-transition: 250ms ease;
         }
 
         /* Anti-Copy & Selection Lock */
@@ -76,11 +68,10 @@
 
         html, body {
             height: 100%;
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+            font-family: var(--font-body);
             background-color: var(--bg-canvas);
-            color: var(--brand-black);
+            color: var(--brand-ink);
             -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
             overflow: hidden;
         }
 
@@ -92,8 +83,8 @@
             padding: 24px 16px;
             position: relative;
             background: 
-                radial-gradient(circle at 50% 15%, rgba(255, 89, 0, 0.06) 0%, transparent 60%),
-                radial-gradient(circle at 85% 85%, rgba(0, 110, 245, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 50% 10%, rgba(117, 166, 140, 0.10) 0%, transparent 60%),
+                radial-gradient(circle at 85% 90%, rgba(81, 124, 101, 0.08) 0%, transparent 50%),
                 var(--bg-canvas);
         }
 
@@ -105,40 +96,36 @@
             filter: blur(90px);
             z-index: 0;
             pointer-events: none;
-            opacity: 0.5;
-            transition: all 600ms ease;
+            opacity: 0.6;
         }
         .orb-1 {
             top: -120px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(255, 89, 0, 0.12);
+            background: rgba(117, 166, 140, 0.18);
         }
         .orb-2 {
             bottom: -150px;
             right: 10%;
-            background: rgba(0, 110, 245, 0.10);
+            background: rgba(81, 124, 101, 0.15);
         }
 
         .login-wrapper {
             position: relative;
             z-index: 10;
             width: 100%;
-            max-width: 400px;
+            max-width: 420px;
         }
 
         .login-card {
             background: var(--surface-card);
-            backdrop-filter: blur(24px) saturate(180%);
-            -webkit-backdrop-filter: blur(24px) saturate(180%);
-            border: 0.5px solid var(--gray-border);
-            border-radius: var(--radius-xl);
+            border: 1px solid var(--brand-hairline);
+            border-radius: var(--radius-none);
             padding: 44px 34px;
-            box-shadow: var(--shadow-level-3);
             text-align: center;
             position: relative;
             overflow: hidden;
-            transition: transform 300ms ease, box-shadow 300ms ease, border-color 300ms ease;
+            transition: all 250ms ease;
         }
 
         .login-card::before {
@@ -148,18 +135,16 @@
             left: 0;
             right: 0;
             height: 4px;
-            background: linear-gradient(90deg, var(--brand-orange), var(--brand-blue));
+            background: var(--brand-primary);
         }
 
         .login-card.card-success {
-            border-color: rgba(13, 153, 38, 0.4);
-            box-shadow: 0px 12px 36px rgba(13, 153, 38, 0.15), var(--shadow-level-3);
+            border-color: var(--brand-green);
         }
 
         .login-card.card-error {
             animation: appleShake 500ms cubic-bezier(.36,.07,.19,.97) both;
-            border-color: rgba(255, 61, 0, 0.5);
-            box-shadow: 0px 12px 36px rgba(255, 61, 0, 0.15), var(--shadow-level-3);
+            border-color: var(--brand-red);
         }
 
         @keyframes appleShake {
@@ -217,10 +202,11 @@
         }
 
         h1 {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--brand-black);
-            letter-spacing: -0.025em;
+            font-family: var(--font-display);
+            font-size: 26px;
+            font-weight: 500;
+            color: var(--brand-ink);
+            letter-spacing: -0.01em;
             line-height: 1.25;
             margin-bottom: 24px;
         }
@@ -236,15 +222,15 @@
             gap: 10px;
             position: relative;
             padding: 6px;
-            border-radius: var(--radius-lg);
+            border-radius: var(--radius-md);
             transition: all 250ms ease;
             cursor: pointer;
         }
 
         /* Subtle container accent when focused */
         .pin-boxes.is-focused {
-            background: rgba(255, 89, 0, 0.03);
-            border-radius: var(--radius-lg);
+            background: rgba(117, 166, 140, 0.05);
+            border-radius: var(--radius-md);
         }
 
         .laser-scanner {
@@ -252,8 +238,8 @@
             top: 6px;
             bottom: 6px;
             width: 3px;
-            background: var(--brand-orange);
-            box-shadow: 0 0 10px 2px var(--brand-orange);
+            background: var(--brand-primary);
+            box-shadow: 0 0 10px 2px var(--brand-primary);
             opacity: 0;
             pointer-events: none;
             z-index: 5;
@@ -272,55 +258,50 @@
 
         .pin-box {
             flex: 1;
-            height: 58px;
+            height: 56px;
             background: #FFFFFF;
-            border: 1.5px solid var(--gray-border);
-            border-radius: var(--radius-md);
+            border: 1px solid var(--brand-hairline);
+            border-radius: var(--radius-none);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
-            font-weight: 700;
+            font-size: 22px;
+            font-weight: 600;
             font-family: "SF Mono", Menlo, Consolas, monospace;
-            color: var(--brand-black);
+            color: var(--brand-ink);
             cursor: pointer;
             position: relative;
             overflow: hidden;
-            transition: all 220ms cubic-bezier(0.25, 0.1, 0.25, 1);
-            box-shadow: var(--shadow-level-1);
+            transition: all 200ms ease;
         }
 
-        /* Unfocused / Idle: No glow */
+        /* Unfocused / Idle */
         .pin-box.active {
-            border-color: rgba(21, 25, 30, 0.25);
+            border-color: rgba(45, 45, 46, 0.3);
             background: #FFFFFF;
         }
 
-        /* Focused: GLOW ONLY when clicked / focused */
+        /* Focused */
         .pin-boxes.is-focused .pin-box.active {
-            border-color: var(--brand-orange);
-            background: var(--brand-orange-light);
-            box-shadow: 0 0 0 3px rgba(255, 89, 0, 0.22), 0 2px 10px rgba(255, 89, 0, 0.18);
-            transform: translateY(-2px);
+            border-color: var(--brand-primary);
+            background: var(--brand-surface-alt);
         }
 
         .pin-box.filled {
-            border-color: rgba(21, 25, 30, 0.35);
-            color: var(--pure-black);
+            border-color: var(--brand-ink);
+            color: var(--brand-ink);
             background: #FFFFFF;
             animation: digitPop 180ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .pin-boxes.is-focused .pin-box.filled {
-            border-color: rgba(21, 25, 30, 0.70);
-            box-shadow: 0 0 0 1px rgba(21, 25, 30, 0.15);
+            border-color: var(--brand-ink);
         }
 
         .pin-box.verified {
             border-color: var(--brand-green);
             color: var(--brand-green);
             background: var(--brand-green-light);
-            box-shadow: 0 0 0 3px rgba(13, 153, 38, 0.20);
         }
 
         @keyframes digitPop {
@@ -337,7 +318,7 @@
             height: 1px;
         }
 
-        /* Apple UI Styled Checkbox */
+        /* Checkbox */
         .remember-container {
             display: flex;
             align-items: center;
@@ -354,12 +335,12 @@
             user-select: none;
             font-size: 13px;
             font-weight: 500;
-            color: var(--gray-secondary);
+            color: var(--brand-muted);
             transition: color 200ms ease;
         }
 
         .apple-checkbox-label:hover {
-            color: var(--brand-black);
+            color: var(--brand-ink);
         }
 
         .apple-checkbox-input {
@@ -372,20 +353,18 @@
         .apple-checkbox-custom {
             width: 18px;
             height: 18px;
-            border-radius: 5px;
-            border: 1.5px solid var(--gray-border);
+            border-radius: 4px;
+            border: 1px solid var(--brand-hairline);
             background: #FFFFFF;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: var(--spring-transition);
-            box-shadow: var(--shadow-level-1);
         }
 
         .apple-checkbox-input:checked + .apple-checkbox-custom {
-            background: var(--brand-orange);
-            border-color: var(--brand-orange);
-            box-shadow: 0 2px 8px rgba(255, 89, 0, 0.25);
+            background: var(--brand-primary);
+            border-color: var(--brand-primary);
         }
 
         .check-svg {
@@ -398,7 +377,7 @@
             stroke-linejoin: round;
             opacity: 0;
             transform: scale(0.6);
-            transition: all 180ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 180ms ease;
         }
 
         .apple-checkbox-input:checked + .apple-checkbox-custom .check-svg {
@@ -407,23 +386,22 @@
         }
 
         .status-terminal {
-            background: #FFFFFF;
-            border: 1px solid var(--gray-border);
-            border-radius: var(--radius-md);
+            background: var(--brand-surface-alt);
+            border: 1px solid var(--brand-hairline);
+            border-radius: var(--radius-none);
             padding: 8px 14px;
             font-family: "SF Mono", Menlo, Consolas, monospace;
             font-size: 11px;
-            color: var(--gray-secondary);
+            color: var(--brand-muted);
             display: flex;
             align-items: center;
             justify-content: center;
             margin-bottom: 20px;
             height: 38px;
-            box-shadow: var(--shadow-level-1);
         }
 
         .status-text {
-            color: var(--brand-black);
+            color: var(--brand-ink);
             font-size: 11px;
             font-weight: 500;
             white-space: nowrap;
@@ -433,13 +411,14 @@
 
         .btn-unlock {
             width: 100%;
-            height: 46px;
-            background: var(--brand-orange);
+            height: 48px;
+            background: var(--brand-primary);
             color: #FFFFFF;
             border: none;
-            border-radius: var(--radius-md);
-            font-size: 14px;
-            font-weight: 600;
+            border-radius: var(--radius-full);
+            font-family: var(--font-body);
+            font-size: 15px;
+            font-weight: 500;
             letter-spacing: -0.01em;
             cursor: pointer;
             position: relative;
@@ -448,19 +427,15 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
-            box-shadow: 0 2px 10px rgba(255, 89, 0, 0.28);
-            transition: var(--spring-transition);
+            transition: background-color 200ms ease;
         }
 
         .btn-unlock:hover {
-            background: var(--brand-orange-hover);
-            box-shadow: 0 4px 16px rgba(255, 89, 0, 0.38);
-            transform: translateY(-1px);
+            background: var(--brand-primary-hover);
         }
 
         .btn-unlock:active {
-            background: var(--brand-orange-active);
-            transform: translateY(1px);
+            background: var(--brand-link);
         }
 
         /* ==========================================================================

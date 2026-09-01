@@ -1,0 +1,39 @@
+{
+  "name": "arogyasetu-bridge",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Enterprise State-Scale Offline-First Health Mesh Platform (SIH 2026 PS ID 26133)",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "dev:api": "npm --workspace=apps/api-gateway run dev",
+    "dev:dashboard": "npm --workspace=apps/web-dashboard run dev",
+    "dev:pwa": "npm --workspace=apps/field-pwa run dev",
+    "lint": "npm run lint --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "db:generate": "npx prisma generate --schema=database/prisma/schema.prisma",
+    "db:seed": "npx ts-node database/seeds/seed.ts"
+  },
+  "keywords": [
+    "sih2026",
+    "telemedicine",
+    "abdm",
+    "offline-first",
+    "cdss",
+    "maharashtra-health",
+    "hireavilla-design"
+  ],
+  "author": "ArogyaSetu Bridge Team",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "@types/node": "^20.11.24",
+    "prettier": "^3.2.5",
+    "rimraf": "^5.0.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  }
+}

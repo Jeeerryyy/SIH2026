@@ -1,0 +1,104 @@
+:root {
+  --color-primary: #75A68C;
+  --color-primary-hover: #456B4D;
+  --color-link: #517C65;
+  --color-on-primary: #2D2D2E;
+  --color-ink: #2D2D2E;
+  --color-body: #FFFFFF;
+  --color-surface-alt: #E3EDE8;
+  --color-surface-raised: #DCE5E1;
+  --color-hairline: #D6D6D6;
+  --color-muted: #737373;
+  --color-faint: #659079;
+
+  --font-display: 'Athelas', 'Georgia', 'Playfair Display', serif;
+  --font-body: 'Hanken Grotesk', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  --rounded-pill: 9999px;
+  --rounded-card: 0px;
+  --rounded-img: 10px;
+
+  --spacing-xs: 8px;
+  --spacing-sm: 12px;
+  --spacing-md: 16px;
+  --spacing-lg: 20px;
+  --spacing-xl: 24px;
+  --spacing-xxl: 32px;
+  --spacing-band: 80px;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--color-body);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Color-Blocking Elevation Pattern */
+.surface-alt-band {
+  background-color: var(--color-surface-alt);
+  padding: var(--spacing-xxl) 0;
+}
+
+.hireavilla-card {
+  background-color: var(--color-body);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--rounded-card);
+  padding: var(--spacing-xl);
+  transition: opacity 200ms ease;
+}
+
+.hireavilla-card:hover {
+  opacity: 0.95;
+}
+
+/* Pill Button */
+.btn-hireavilla-primary {
+  background-color: var(--color-primary);
+  color: #FFFFFF;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: var(--rounded-pill);
+  height: 48px;
+  padding: 0 32px;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background-color 200ms ease;
+}
+
+.btn-hireavilla-primary:hover {
+  background-color: var(--color-primary-hover);
+}
+
+/* Inputs */
+.input-hireavilla {
+  width: 100%;
+  height: 46px;
+  border: 1px solid var(--color-hairline);
+  background-color: var(--color-body);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  font-size: 15px;
+  padding: 0 16px;
+  border-radius: var(--rounded-card);
+  box-sizing: border-box;
+  transition: border-color 200ms ease;
+}
+
+.input-hireavilla:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.input-hireavilla::placeholder {
+  color: var(--color-faint);
+}

@@ -38,53 +38,59 @@ def encrypt_payload(plaintext_str):
 
 COMMON_CSS = """
         /* ==========================================================================
-           1. DESIGN TOKENS & CONSTANTS (Apple UI 8pt Grid + Brex Color System)
+           1. DESIGN TOKENS & CONSTANTS (Hireavilla Luxury Sage)
            ========================================================================== */
         :root {
-            /* Brex Core Palette */
-            --brand-black: #15191E;
+            /* Hireavilla Luxury Sage Core Palette */
+            --brand-primary: #75A68C;
+            --brand-primary-hover: #456B4D;
+            --brand-link: #517C65;
+            --brand-ink: #2D2D2E;
             --pure-black: #000000;
-            --brand-orange: #FF5900;
-            --brand-orange-hover: #E64E00;
-            --brand-orange-active: #CC4400;
-            --brand-orange-light: rgba(255, 89, 0, 0.08);
-            --brand-blue: #006EF5;
-            --brand-blue-light: #D5E8FB;
-            --brand-purple: #3C16D5;
-            --brand-purple-light: #E6E2FF;
-            --brand-green: #0D9926;
-            --brand-green-light: #D1F4D2;
-            --brand-red: #FF3D00;
-            --brand-red-light: rgba(255, 61, 0, 0.10);
+            
+            --brand-orange: #75A68C;
+            --brand-orange-hover: #456B4D;
+            --brand-orange-active: #517C65;
+            --brand-orange-light: #E3EDE8;
+            --brand-blue: #517C65;
+            --brand-blue-light: #E3EDE8;
+            --brand-purple: #456B4D;
+            --brand-purple-light: #E3EDE8;
+            --brand-green: #517C65;
+            --brand-green-light: #E3EDE8;
+            --brand-red: #C8372D;
+            --brand-red-light: #FDF2F2;
             
             /* Neutrals */
-            --gray-secondary: #60646C;
-            --gray-tertiary: #8B8D98;
-            --gray-light: #B9BBC6;
-            --gray-border: rgba(21, 25, 30, 0.10);
-            --gray-divider: #EAEAEF;
+            --gray-secondary: #737373;
+            --gray-tertiary: #659079;
+            --gray-light: #D6D6D6;
+            --gray-border: #D6D6D6;
+            --gray-divider: #D6D6D6;
             
-            /* Surfaces (Glassmorphic) */
-            --bg-canvas: #F3F3F7;
-            --surface-card: rgba(255, 255, 255, 0.88);
-            --surface-elevated: #FFFFFF;
-            --surface-subtle: #FAFAFC;
+            /* Surfaces */
+            --bg-canvas: #FFFFFF;
+            --surface-card: #FFFFFF;
+            --surface-elevated: #E3EDE8;
+            --surface-subtle: #E3EDE8;
+            --brand-surface-alt: #E3EDE8;
             
             /* Elevation & Shadows */
-            --shadow-level-1: 0px 2px 8px rgba(0, 0, 0, 0.06);
-            --shadow-level-2: 0px 4px 16px rgba(0, 0, 0, 0.08);
-            --shadow-level-3: 0px 8px 24px rgba(0, 0, 0, 0.12);
-            --shadow-level-4: 0px 12px 32px rgba(0, 0, 0, 0.16);
-            --shadow-focus: 0px 0px 0px 3px rgba(110, 245, 0.18);
+            --shadow-level-1: none;
+            --shadow-level-2: none;
+            --shadow-level-3: none;
+            --shadow-level-4: none;
+            --shadow-focus: 0px 0px 0px 3px rgba(117, 166, 140, 0.25);
             
-            /* Radii (Apple Constants) */
-            --radius-sm: 8px;
-            --radius-md: 12px;
-            --radius-lg: 20px;
+            /* Radii */
+            --radius-none: 0px;
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 12px;
             --radius-full: 9999px;
             
             /* Timing / Spring */
-            --spring-transition: 300ms cubic-bezier(0.25, 0.1, 0.25, 1);
+            --spring-transition: 200ms ease;
         }
 
         /* Anti-Copy & Selection Lock */
@@ -109,13 +115,12 @@ COMMON_CSS = """
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, sans-serif;
-            font-size: 14px;
+            font-family: 'Hanken Grotesk', 'Inter', -apple-system, sans-serif;
+            font-size: 15px;
             line-height: 1.6;
-            color: var(--brand-black);
+            color: var(--brand-ink);
             background-color: var(--bg-canvas);
             -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
             padding-bottom: 80px;
         }
 
@@ -125,13 +130,13 @@ COMMON_CSS = """
             left: 0;
             height: 3px;
             width: 0%;
-            background: linear-gradient(90deg, var(--brand-orange), var(--brand-blue));
+            background: var(--brand-primary);
             z-index: 2000;
             transition: width 100ms ease-out;
         }
 
         /* ==========================================================================
-           2. UNIFIED TWO-TIER APPLE NAVIGATION BAR
+           2. UNIFIED TWO-TIER HIREAVILLA NAVIGATION BAR
            ========================================================================== */
         .apple-nav-container {
             position: sticky;
@@ -148,13 +153,10 @@ COMMON_CSS = """
 
         .apple-nav {
             width: 100%;
-            padding: 8px 18px;
-            background: rgba(255, 255, 255, 0.88);
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
-            border: 0.5px solid var(--gray-border);
+            padding: 10px 20px;
+            background: #FFFFFF;
+            border: 1px solid var(--gray-border);
             border-radius: var(--radius-full);
-            box-shadow: var(--shadow-level-2);
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -178,19 +180,19 @@ COMMON_CSS = """
             display: flex;
             align-items: center;
             gap: 10px;
-            color: var(--brand-black);
+            font-size: 15px;
             font-weight: 600;
-            font-size: 14px;
-            letter-spacing: -0.015em;
-            flex-shrink: 0;
+            color: var(--brand-ink);
+            letter-spacing: -0.01em;
+            cursor: pointer;
         }
 
         .brand-dot {
             width: 10px;
             height: 10px;
-            background-color: var(--brand-orange);
             border-radius: 50%;
-            box-shadow: 0 0 0 3px rgba(255, 89, 0, 0.2);
+            background: var(--brand-primary);
+            display: inline-block;
         }
 
         .nav-right-group {
@@ -202,7 +204,7 @@ COMMON_CSS = """
         .doc-tabs {
             display: flex;
             align-items: center;
-            background: rgba(21, 25, 30, 0.06);
+            background: var(--brand-surface-alt);
             padding: 3px;
             border-radius: var(--radius-full);
             gap: 2px;
@@ -223,22 +225,21 @@ COMMON_CSS = """
         }
 
         .doc-tab:hover {
-            color: var(--brand-black);
+            color: var(--brand-ink);
             background: rgba(255, 255, 255, 0.6);
         }
 
         .doc-tab.active {
-            color: var(--brand-black);
+            color: var(--brand-ink);
             background: #FFFFFF;
             font-weight: 600;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
         }
 
         /* Sign Out Button */
         .auth-logout-btn {
-            background: rgba(21, 25, 30, 0.05);
+            background: transparent;
             border: 1px solid var(--gray-border);
-            color: var(--brand-black);
+            color: var(--brand-ink);
             font-size: 12px;
             font-weight: 500;
             padding: 6px 14px;
@@ -252,22 +253,18 @@ COMMON_CSS = """
         }
 
         .auth-logout-btn:hover {
-            background: var(--brand-orange);
-            border-color: var(--brand-orange);
+            background: var(--brand-primary);
+            border-color: var(--brand-primary);
             color: #FFFFFF;
-            box-shadow: 0 2px 8px rgba(255, 89, 0, 0.25);
         }
 
         /* Sub-Navigation Pill Bar */
         .apple-subnav-container {
             width: fit-content;
             max-width: 100%;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
-            border: 0.5px solid var(--gray-border);
+            background: #FFFFFF;
+            border: 1px solid var(--gray-border);
             border-radius: var(--radius-full);
-            box-shadow: var(--shadow-level-1);
             padding: 4px 10px;
             overflow-x: auto;
         }
@@ -291,13 +288,13 @@ COMMON_CSS = """
         }
 
         .nav-link:hover {
-            color: var(--brand-black);
-            background: rgba(21, 25, 30, 0.05);
+            color: var(--brand-ink);
+            background: var(--brand-surface-alt);
         }
 
         .nav-link.active {
-            color: var(--brand-orange);
-            background: var(--brand-orange-light);
+            color: #FFFFFF;
+            background: var(--brand-primary);
             font-weight: 600;
         }
 
@@ -310,44 +307,40 @@ COMMON_CSS = """
 
         .apple-card {
             background: var(--surface-card);
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
-            border: 0.5px solid var(--gray-border);
-            border-radius: var(--radius-lg);
+            border: 1px solid var(--gray-border);
+            border-radius: var(--radius-none);
             padding: 44px 48px;
             margin-bottom: 32px;
-            box-shadow: var(--shadow-level-1);
             position: relative;
             overflow: hidden;
         }
 
         .hero-card {
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(255, 255, 255, 0.84) 100%);
-            border-top: 4px solid var(--brand-orange);
+            background: #FFFFFF;
+            border-top: 4px solid var(--brand-primary);
             padding: 48px;
         }
 
         h1 {
-            font-size: 30px;
-            font-weight: 700;
-            color: var(--brand-black);
-            letter-spacing: -0.025em;
-            line-height: 1.2;
+            font-family: 'Playfair Display', 'Athelas', 'Georgia', serif;
+            font-size: 32px;
+            font-weight: 500;
+            color: var(--brand-ink);
+            letter-spacing: -0.01em;
+            line-height: 1.25;
             margin-bottom: 16px;
         }
 
         .hero-card h1 {
-            font-size: 34px;
-            letter-spacing: -0.03em;
-            background: linear-gradient(135deg, var(--pure-black) 40%, var(--brand-orange) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-size: 36px;
+            color: var(--brand-ink);
         }
 
         h2 {
-            font-size: 20px;
-            font-weight: 600;
-            color: var(--brand-black);
+            font-family: 'Playfair Display', 'Athelas', 'Georgia', serif;
+            font-size: 22px;
+            font-weight: 500;
+            color: var(--brand-ink);
             letter-spacing: -0.020em;
             line-height: 1.3;
             margin-top: 24px;
