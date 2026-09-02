@@ -9,7 +9,7 @@ export interface VitalsTriageResult {
 
 export function evaluateVitals(vitals: Partial<IVitals>): VitalsTriageResult {
   const alerts: string[] = [];
-  let highestTier = TriageUrgencyTier.ROUTINE_GREEN;
+  let highestTier: TriageUrgencyTier = TriageUrgencyTier.ROUTINE_GREEN;
   let score = 10;
 
   // 1. SpO2 Oxygen Saturation (Immediate Hypoxia Danger)
@@ -20,10 +20,8 @@ export function evaluateVitals(vitals: Partial<IVitals>): VitalsTriageResult {
       score = Math.max(score, 95);
     } else if (vitals.spo2 <= 93) {
       alerts.push(`Moderate Hypoxia (SpO2: ${vitals.spo2}%) — Teleconsultation & Close Monitoring`);
-      if (highestTier !== TriageUrgencyTier.EMERGENCY_RED) {
-        highestTier = TriageUrgencyTier.URGENT_AMBER;
-        score = Math.max(score, 75);
-      }
+      highestTier = TriageUrgencyTier.URGENT_AMBER;
+      score = Math.max(score, 75);
     }
   }
 

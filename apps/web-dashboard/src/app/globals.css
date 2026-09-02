@@ -1,155 +1,899 @@
+/* ============================================================================
+   ArogyaSetu Bridge – Hireavilla Luxury Sage Design System
+   Professional Enterprise Dashboard CSS
+   ============================================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap');
+
+/* ── 1. Design Tokens ─────────────────────────────────────────────────────── */
 :root {
-  --color-primary: #75A68C;
-  --color-primary-hover: #456B4D;
-  --color-link: #517C65;
-  --color-on-primary: #2D2D2E;
-  --color-ink: #2D2D2E;
-  --color-body: #FFFFFF;
-  --color-surface-alt: #E3EDE8;
-  --color-surface-raised: #DCE5E1;
-  --color-hairline: #D6D6D6;
-  --color-muted: #737373;
-  --color-faint: #659079;
+  /* Brand Colours */
+  --primary:            #75A68C;
+  --primary-hover:      #5D8E74;
+  --primary-active:     #456B4D;
+  --primary-light:      #E3EDE8;
+  --primary-lighter:    #F0F6F3;
 
-  --triage-red: #C8372D;
-  --triage-red-bg: #FDF2F2;
-  --triage-amber: #D97706;
-  --triage-amber-bg: #FEF9C3;
-  --triage-yellow: #858C2B;
-  --triage-yellow-bg: #F9FBE7;
-  --triage-green: #517C65;
-  --triage-green-bg: #E3EDE8;
+  /* Semantic Colours */
+  --danger:             #C8372D;
+  --danger-bg:          #FDF2F2;
+  --danger-border:      #F5C2C0;
+  --warning:            #D97706;
+  --warning-bg:         #FFFBEB;
+  --warning-border:     #FDE68A;
+  --success:            #16A34A;
+  --success-bg:         #F0FDF4;
+  --success-border:     #BBF7D0;
+  --info:               #2563EB;
+  --info-bg:            #EFF6FF;
+  --info-border:        #BFDBFE;
 
-  --font-display: 'Athelas', 'Georgia', 'Playfair Display', serif;
-  --font-body: 'Hanken Grotesk', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  /* Triage Tier Colours */
+  --triage-red:         #C8372D;
+  --triage-red-bg:      #FDF2F2;
+  --triage-amber:       #D97706;
+  --triage-amber-bg:    #FEF9C3;
+  --triage-yellow:      #7C7C18;
+  --triage-yellow-bg:   #FEFCE8;
+  --triage-green:       #517C65;
+  --triage-green-bg:    #E3EDE8;
 
-  --rounded-pill: 9999px;
-  --rounded-card: 0px;
+  /* Text */
+  --ink:                #1A1A1A;
+  --ink-secondary:      #4A4A4A;
+  --ink-muted:          #737373;
+  --ink-faint:          #A3A3A3;
+  --ink-on-primary:     #FFFFFF;
+
+  /* Surfaces */
+  --surface-body:       #F8FAF9;
+  --surface-card:       #FFFFFF;
+  --surface-alt:        #E3EDE8;
+  --surface-raised:     #F0F6F3;
+  --surface-overlay:    rgba(255, 255, 255, 0.85);
+
+  /* Sidebar */
+  --sidebar-bg:         #1C2B22;
+  --sidebar-text:       #CBD5C9;
+  --sidebar-text-muted: #8A9E87;
+  --sidebar-hover:      rgba(117, 166, 140, 0.12);
+  --sidebar-active:     rgba(117, 166, 140, 0.20);
+  --sidebar-active-bar: #75A68C;
+  --sidebar-width:      260px;
+  --sidebar-collapsed:  68px;
+
+  /* Hairlines & Borders */
+  --hairline:           #E5EDE9;
+  --border:             #D0DDD8;
+
+  /* Shadows */
+  --shadow-xs:          0 1px 2px rgba(0,0,0,0.05);
+  --shadow-sm:          0 2px 8px rgba(0,0,0,0.06);
+  --shadow-md:          0 4px 16px rgba(0,0,0,0.08);
+  --shadow-lg:          0 8px 32px rgba(0,0,0,0.10);
+  --shadow-focus:       0 0 0 3px rgba(117,166,140,0.28);
+
+  /* Radii */
+  --r-xs:   4px;
+  --r-sm:   8px;
+  --r-md:   12px;
+  --r-lg:   16px;
+  --r-xl:   24px;
+  --r-pill: 9999px;
+
+  /* Typography */
+  --font-body:    'Hanken Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: 'Playfair Display', Georgia, serif;
+
+  /* Motion */
+  --ease:       200ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-slow:  350ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  /* Layout */
+  --topbar-height: 64px;
 }
 
-* {
+/* ── 2. Reset & Base ──────────────────────────────────────────────────────── */
+*, *::before, *::after {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 15px;
 }
 
 body {
-  margin: 0;
-  padding: 0;
-  background-color: var(--color-body);
-  color: var(--color-ink);
   font-family: var(--font-body);
-  font-size: 15px;
-  line-height: 1.5;
+  background-color: var(--surface-body);
+  color: var(--ink);
+  line-height: 1.55;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
-h1, h2, h3, .serif-heading {
-  font-family: var(--font-display);
-  font-weight: 500;
-  margin: 0 0 8px 0;
-  color: var(--color-ink);
+/* ── 3. Layout Shell ──────────────────────────────────────────────────────── */
+.app-shell {
+  display: flex;
+  min-height: 100vh;
 }
 
-h1 { font-size: 32px; }
-h2 { font-size: 24px; }
-h3 { font-size: 18px; }
+/* ── 4. Sidebar ───────────────────────────────────────────────────────────── */
+.sidebar {
+  width: var(--sidebar-width);
+  background-color: var(--sidebar-bg);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 200;
+  transition: width var(--ease-slow), transform var(--ease-slow);
+  overflow: hidden;
+  flex-shrink: 0;
+}
 
-/* Hireavilla Pill Button */
-.btn-pill {
-  background-color: var(--color-primary);
-  color: #FFFFFF;
-  font-family: var(--font-body);
-  font-size: 14px;
-  font-weight: 500;
-  border-radius: var(--rounded-pill);
-  height: 44px;
-  padding: 0 24px;
-  border: none;
-  cursor: pointer;
-  display: inline-flex;
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  min-height: var(--topbar-height);
+}
+
+.sidebar-logo-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--r-md);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-active) 100%);
+  display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  transition: all 180ms ease;
-  text-decoration: none;
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(69,107,77,0.4);
 }
 
-.btn-pill:hover {
-  background-color: var(--color-primary-hover);
+.sidebar-logo-text {
+  overflow: hidden;
 }
 
-.btn-pill-secondary {
-  background-color: var(--color-surface-alt);
-  color: var(--color-ink);
-  border: 1px solid var(--color-hairline);
+.sidebar-logo-text .brand-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #FFFFFF;
+  letter-spacing: -0.2px;
+  white-space: nowrap;
 }
 
-.btn-pill-secondary:hover {
-  background-color: var(--color-surface-raised);
+.sidebar-logo-text .brand-sub {
+  font-size: 11px;
+  color: var(--sidebar-text-muted);
+  white-space: nowrap;
 }
 
-/* Hireavilla Color Block Card */
-.hireavilla-card {
-  background-color: var(--color-body);
-  border: 1px solid var(--color-hairline);
-  padding: 24px;
-  border-radius: var(--rounded-card);
+/* Nav Groups */
+.sidebar-nav {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 12px 10px;
+  scrollbar-width: none;
+}
+.sidebar-nav::-webkit-scrollbar { display: none; }
+
+.nav-section-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--sidebar-text-muted);
+  padding: 12px 12px 6px;
+  white-space: nowrap;
 }
 
-.hireavilla-card-alt {
-  background-color: var(--color-surface-alt);
-  border: 1px solid var(--color-hairline);
-  padding: 24px;
-  border-radius: var(--rounded-card);
-}
-
-/* Clean Input */
-.hireavilla-input {
-  width: 100%;
-  height: 44px;
-  border: 1px solid var(--color-hairline);
-  background-color: #FFFFFF;
-  color: var(--color-ink);
-  padding: 0 16px;
-  font-family: var(--font-body);
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  transition: background var(--ease);
+  color: var(--sidebar-text);
   font-size: 14px;
-  outline: none;
-  transition: border-color 180ms ease;
+  font-weight: 450;
+  position: relative;
+  white-space: nowrap;
+  border: none;
+  background: transparent;
+  width: 100%;
+  text-align: left;
 }
 
-.hireavilla-input:focus {
-  border-color: var(--color-primary);
+.nav-item:hover {
+  background: var(--sidebar-hover);
+  color: #FFFFFF;
 }
 
-/* Responsive Table */
-.table-container {
+.nav-item.active {
+  background: var(--sidebar-active);
+  color: #FFFFFF;
+  font-weight: 600;
+}
+
+.nav-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 20px;
+  background: var(--sidebar-active-bar);
+  border-radius: 0 2px 2px 0;
+}
+
+.nav-item-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+}
+
+.nav-item-badge {
+  margin-left: auto;
+  background: var(--danger);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: var(--r-pill);
+  min-width: 18px;
+  text-align: center;
+}
+
+/* Sidebar Footer */
+.sidebar-footer {
+  padding: 12px 10px;
+  border-top: 1px solid rgba(255,255,255,0.07);
+}
+
+.sidebar-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+}
+
+.sidebar-user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--r-pill);
+  background: linear-gradient(135deg, var(--primary), var(--primary-active));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.sidebar-user-info { overflow: hidden; }
+.sidebar-user-name  { font-size: 13px; font-weight: 600; color: #FFFFFF; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sidebar-user-role  { font-size: 11px; color: var(--sidebar-text-muted); white-space: nowrap; }
+
+/* ── 5. Main Content Area ─────────────────────────────────────────────────── */
+.main-content {
+  margin-left: var(--sidebar-width);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  transition: margin-left var(--ease-slow);
+}
+
+/* ── 6. Top Bar ───────────────────────────────────────────────────────────── */
+.topbar {
+  height: var(--topbar-height);
+  background: rgba(255,255,255,0.90);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--hairline);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  gap: 16px;
+}
+
+.topbar-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.3px;
+}
+
+.topbar-meta {
+  font-size: 12.5px;
+  color: var(--ink-muted);
+  margin-top: 1px;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+
+/* Status Pill */
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: var(--r-pill);
+  font-size: 12.5px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.status-pill .pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  animation: pulse-anim 2s ease-in-out infinite;
+}
+
+@keyframes pulse-anim {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.6; transform: scale(0.85); }
+}
+
+.status-pill.online {
+  background: var(--success-bg);
+  color: var(--success);
+  border: 1px solid var(--success-border);
+}
+.status-pill.online .pulse-dot { background: var(--success); }
+
+.status-pill.alert {
+  background: var(--warning-bg);
+  color: var(--warning);
+  border: 1px solid var(--warning-border);
+}
+
+/* Hamburger for mobile */
+.hamburger {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: var(--r-sm);
+  color: var(--ink);
+  flex-shrink: 0;
+}
+
+/* ── 7. Page Body ─────────────────────────────────────────────────────────── */
+.page-body {
+  flex: 1;
+  padding: 28px;
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* Page Header */
+.page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+
+.page-header-left h1 {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--ink);
+  letter-spacing: -0.5px;
+  line-height: 1.25;
+}
+
+.page-header-left p {
+  font-size: 13.5px;
+  color: var(--ink-muted);
+  margin-top: 4px;
+}
+
+.page-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* ── 8. KPI Cards ─────────────────────────────────────────────────────────── */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.kpi-card {
+  background: var(--surface-card);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-lg);
+  padding: 20px 22px;
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow var(--ease), transform var(--ease);
+  cursor: default;
+}
+
+.kpi-card::before {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  border-radius: var(--r-lg) 0 0 var(--r-lg);
+}
+
+.kpi-card.green::before  { background: var(--primary); }
+.kpi-card.red::before    { background: var(--danger); }
+.kpi-card.amber::before  { background: var(--warning); }
+.kpi-card.blue::before   { background: var(--info); }
+
+.kpi-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.kpi-label {
+  font-size: 11.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--ink-muted);
+  margin-bottom: 8px;
+}
+
+.kpi-value {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -1px;
+  margin-bottom: 6px;
+}
+
+.kpi-card.green  .kpi-value { color: var(--primary-active); }
+.kpi-card.red    .kpi-value { color: var(--danger); }
+.kpi-card.amber  .kpi-value { color: var(--warning); }
+.kpi-card.blue   .kpi-value { color: var(--info); }
+
+.kpi-sub {
+  font-size: 12px;
+  color: var(--ink-muted);
+}
+
+.kpi-icon {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  font-size: 28px;
+  opacity: 0.15;
+}
+
+/* Trend chip */
+.kpi-trend {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: var(--r-pill);
+  margin-top: 6px;
+}
+.kpi-trend.up   { color: var(--success); background: var(--success-bg); }
+.kpi-trend.down { color: var(--danger);  background: var(--danger-bg); }
+
+/* ── 9. Cards ─────────────────────────────────────────────────────────────── */
+.card {
+  background: var(--surface-card);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--hairline);
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.card-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.2px;
+}
+
+.card-subtitle {
+  font-size: 12.5px;
+  color: var(--ink-muted);
+  margin-top: 2px;
+}
+
+.card-body {
+  padding: 22px;
+}
+
+.card-body.no-pad { padding: 0; }
+
+/* Alt surface card */
+.card-alt {
+  background: var(--surface-raised);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-lg);
+  padding: 20px 22px;
+}
+
+/* ── 10. Table ────────────────────────────────────────────────────────────── */
+.table-wrap {
   width: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
 }
 
-table.hireavilla-table {
+.data-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 14px;
+  font-size: 13.5px;
 }
 
-table.hireavilla-table th {
-  background-color: var(--color-surface-alt);
-  color: var(--color-ink);
-  font-weight: 600;
-  padding: 12px 16px;
+.data-table thead tr {
+  background: var(--primary-lighter);
+}
+
+.data-table th {
+  padding: 11px 16px;
   text-align: left;
-  border-bottom: 1px solid var(--color-hairline);
-  font-size: 12.5px;
+  font-size: 11.5px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.6px;
+  color: var(--ink-secondary);
+  border-bottom: 2px solid var(--hairline);
+  white-space: nowrap;
 }
 
-table.hireavilla-table td {
+.data-table td {
   padding: 14px 16px;
-  border-bottom: 1px solid var(--color-hairline);
+  border-bottom: 1px solid var(--hairline);
+  vertical-align: middle;
+  color: var(--ink);
 }
 
-table.hireavilla-table tr:hover {
-  background-color: #FAFAFA;
+.data-table tbody tr {
+  transition: background var(--ease);
+}
+
+.data-table tbody tr:hover {
+  background: var(--primary-lighter);
+}
+
+.data-table tbody tr:last-child td { border-bottom: none; }
+
+/* Row highlights for triage */
+.data-table tr.row-red    { background: var(--triage-red-bg); }
+.data-table tr.row-amber  { background: var(--triage-amber-bg); }
+.data-table tr.row-green  { background: var(--triage-green-bg); }
+
+/* ── 11. Badges / Chips ───────────────────────────────────────────────────── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  font-size: 11.5px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.badge-red    { background: var(--triage-red-bg);    color: var(--triage-red);   border: 1px solid var(--danger-border); }
+.badge-amber  { background: var(--triage-amber-bg);  color: var(--triage-amber); border: 1px solid var(--warning-border); }
+.badge-green  { background: var(--triage-green-bg);  color: var(--triage-green); border: 1px solid #BBD9CA; }
+.badge-blue   { background: var(--info-bg);           color: var(--info);         border: 1px solid var(--info-border); }
+.badge-neutral{ background: #F5F5F5;                  color: var(--ink-secondary); border: 1px solid #E0E0E0; }
+
+/* ── 12. Buttons ──────────────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 0 20px;
+  height: 40px;
+  border-radius: var(--r-pill);
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all var(--ease);
+  white-space: nowrap;
+  text-decoration: none;
+  letter-spacing: -0.1px;
+}
+
+.btn:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
+
+.btn-primary {
+  background: var(--primary);
+  color: #FFFFFF;
+}
+.btn-primary:hover  { background: var(--primary-hover); }
+.btn-primary:active { background: var(--primary-active); }
+
+.btn-danger {
+  background: var(--danger);
+  color: #FFFFFF;
+}
+.btn-danger:hover { background: #A52B22; }
+
+.btn-secondary {
+  background: var(--surface-card);
+  color: var(--ink);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover { background: var(--surface-raised); }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--ink-secondary);
+  border: 1px solid transparent;
+}
+.btn-ghost:hover { background: var(--surface-raised); }
+
+.btn-sm {
+  height: 32px;
+  padding: 0 14px;
+  font-size: 12.5px;
+}
+
+.btn-xs {
+  height: 26px;
+  padding: 0 10px;
+  font-size: 11.5px;
+}
+
+/* ── 13. Form Inputs ──────────────────────────────────────────────────────── */
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+
+.form-label {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ink-secondary);
+  letter-spacing: -0.1px;
+}
+
+.form-input {
+  height: 42px;
+  padding: 0 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--surface-card);
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--ink);
+  width: 100%;
+  transition: border-color var(--ease), box-shadow var(--ease);
+  outline: none;
+}
+.form-input:focus { border-color: var(--primary); box-shadow: var(--shadow-focus); }
+.form-input[readonly] { background: var(--surface-raised); color: var(--ink-secondary); }
+
+/* ── 14. Sidebar Overlay (mobile) ────────────────────────────────────────── */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 199;
+  backdrop-filter: blur(2px);
+}
+
+/* ── 15. Grid Utilities ───────────────────────────────────────────────────── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.grid-auto { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+
+/* ── 16. Spacing ──────────────────────────────────────────────────────────── */
+.mb-4  { margin-bottom: 4px; }
+.mb-8  { margin-bottom: 8px; }
+.mb-12 { margin-bottom: 12px; }
+.mb-16 { margin-bottom: 16px; }
+.mb-20 { margin-bottom: 20px; }
+.mb-24 { margin-bottom: 24px; }
+.mb-28 { margin-bottom: 28px; }
+.mt-16 { margin-top: 16px; }
+
+/* ── 17. Miscellaneous ────────────────────────────────────────────────────── */
+code {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 12px;
+  background: #F0F0F0;
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: var(--ink-secondary);
+}
+
+.divider {
+  height: 1px;
+  background: var(--hairline);
+  margin: 20px 0;
+}
+
+.text-muted  { color: var(--ink-muted); }
+.text-small  { font-size: 12.5px; }
+.font-semibold { font-weight: 600; }
+.font-bold     { font-weight: 700; }
+.text-danger   { color: var(--danger); }
+.text-success  { color: var(--success); }
+.text-warning  { color: var(--warning); }
+
+/* Patient row clickable */
+.row-clickable { cursor: pointer; }
+
+/* Vitals inline */
+.vitals-hud {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.vital-chip {
+  background: var(--surface-raised);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-sm);
+  padding: 5px 10px;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+.vital-chip span { font-weight: 400; color: var(--ink-muted); }
+
+/* Live call button */
+.live-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--danger);
+  animation: pulse-anim 1.2s ease-in-out infinite;
+}
+
+/* ── 18. Video Container ──────────────────────────────────────────────────── */
+.video-canvas {
+  background: linear-gradient(160deg, #1C2B22 0%, #0D1611 100%);
+  border-radius: var(--r-lg);
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 16/9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+}
+
+.video-hud {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(0deg, rgba(0,0,0,0.75) 0%, transparent 100%);
+  padding: 20px 20px 16px;
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.video-hud-item {
+  font-size: 13px;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+.video-hud-item span {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.video-controls {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  gap: 8px;
+}
+
+/* ── 19. Responsive ───────────────────────────────────────────────────────── */
+@media (max-width: 1100px) {
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .grid-3   { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 768px) {
+  :root { --sidebar-width: 260px; }
+
+  .sidebar {
+    transform: translateX(-100%);
+  }
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  .sidebar-overlay.open {
+    display: block;
+  }
+
+  .main-content {
+    margin-left: 0;
+  }
+
+  .hamburger { display: flex; }
+
+  .page-body { padding: 16px; }
+
+  .topbar { padding: 0 16px; }
+
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+
+  .page-header { flex-direction: column; align-items: flex-start; }
+  .page-header-actions { width: 100%; }
+
+  .topbar-title { font-size: 15px; }
+
+  .data-table th, .data-table td { padding: 10px 12px; }
+
+  .kpi-value { font-size: 26px; }
+
+  .video-canvas { aspect-ratio: 4/3; }
+
+  .video-hud { gap: 10px; }
+}
+
+@media (max-width: 480px) {
+  .kpi-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .kpi-card { padding: 14px 16px; }
+  .kpi-value { font-size: 22px; }
+  .page-body { padding: 12px; }
+  .topbar { padding: 0 12px; }
+  .card-header, .card-body { padding: 14px 16px; }
 }

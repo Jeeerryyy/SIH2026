@@ -4,17 +4,17 @@ import helmet from "helmet";
 import http from "http";
 import { WebSocketServer, WebSocket } from "ws";
 
-import authRoutes from "./routes/auth.routes.js";
-import patientsRoutes from "./routes/patients.routes.js";
-import triageRoutes from "./routes/triage.routes.js";
-import encountersRoutes from "./routes/encounters.routes.js";
-import prescriptionsRoutes from "./routes/prescriptions.routes.js";
-import referralsRoutes from "./routes/referrals.routes.js";
-import ashaIncentivesRoutes from "./routes/ashaIncentives.routes.js";
-import pharmacyRoutes from "./routes/pharmacy.routes.js";
-import syncRoutes from "./routes/sync.routes.js";
-import analyticsRoutes from "./routes/analytics.routes.js";
-import { auditLogMiddleware } from "./middleware/audit.js";
+import authRoutes from "./routes/auth.routes";
+import patientsRoutes from "./routes/patients.routes";
+import triageRoutes from "./routes/triage.routes";
+import encountersRoutes from "./routes/encounters.routes";
+import prescriptionsRoutes from "./routes/prescriptions.routes";
+import referralsRoutes from "./routes/referrals.routes";
+import ashaIncentivesRoutes from "./routes/ashaIncentives.routes";
+import pharmacyRoutes from "./routes/pharmacy.routes";
+import syncRoutes from "./routes/sync.routes";
+import analyticsRoutes from "./routes/analytics.routes";
+import { auditLogMiddleware } from "./middleware/audit";
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -37,7 +37,7 @@ app.use("/api/v1/pharmacy", pharmacyRoutes);
 app.use("/api/v1/sync", syncRoutes);
 app.use("/api/v1/analytics", analyticsRoutes);
 
-app.get("/health", (req, res) => {
+app.get("/health", (_req, res) => {
   res.json({
     status: "HEALTHY",
     service: "ArogyaSetu Bridge Central API Gateway",
@@ -54,7 +54,7 @@ const wss = new WebSocketServer({ server, path: "/ws/teleconsult" });
 
 const rooms = new Map<string, Set<WebSocket>>();
 
-wss.on("connection", (ws: WebSocket, req) => {
+wss.on("connection", (ws: WebSocket, _req) => {
   let currentRoom: string | null = null;
 
   ws.on("message", (message: string) => {

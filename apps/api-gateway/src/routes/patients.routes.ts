@@ -1,5 +1,5 @@
 import { Router, Response } from "express";
-import { AuthRequest, authenticateToken } from "../middleware/auth.js";
+import { AuthRequest, authenticateToken } from "../middleware/auth";
 import { IPatient } from "@arogyasetu/shared-types";
 
 const router = Router();
@@ -70,13 +70,16 @@ router.get("/", authenticateToken, (req: AuthRequest, res: Response) => {
   res.json({ success: true, count: filtered.length, data: filtered });
 });
 
-router.get("/:id", authenticateToken, (req: AuthRequest, res: Response) => {
+router.get("/:id", authenticateToken, (req: AuthRequest, res: Response): void => {
   const patient = MOCK_PATIENTS.find(p => p.id === req.params.id);
-  if (!patient) return res.status(404).json({ success: false, error: "Patient not found" });
+  if (!patient) {
+    res.status(404).json({ success: false, error: "Patient not found" });
+    return;
+  }
   res.json({ success: true, data: patient });
 });
 
-router.post("/", authenticateToken, (req: AuthRequest, res: Response) => {
+router.post("/", authenticateToken, (req: AuthRequest, res: Response): void => {
   const newPatient: IPatient = {
     id: `pat-${Date.now()}`,
     fullName: req.body.fullName,
@@ -89,6 +92,7 @@ router.post("/", authenticateToken, (req: AuthRequest, res: Response) => {
     isHighRiskPregnancy: req.body.isHighRiskPregnancy || false,
     isSickleCellTraitOrDiseased: req.body.isSickleCellTraitOrDiseased || false,
     isUnderMjpjay: true,
+    assignedFacilityId: req.user?.facilityId || "fac-sc-01",
     createdAt: new Date(),
     updatedAt: new Date()
   };

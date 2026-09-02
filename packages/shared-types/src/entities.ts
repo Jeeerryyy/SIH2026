@@ -8,8 +8,6 @@ import {
   ReferralStatus,
   AshaIncentiveType,
   AshaIncentiveStatus,
-  DrugCategory,
-  StockTransactionType,
   SyncState
 } from "./enums.js";
 
